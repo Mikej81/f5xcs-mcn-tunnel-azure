@@ -12,8 +12,16 @@ resource "random_string" "admin_password" {
   special     = false
 }
 
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
 output "env_prefix" {
   value = random_string.env_prefix.result
+}
+
+output "local_public_ip" {
+  value = data.http.myip
 }
 
 output "admin_password" {

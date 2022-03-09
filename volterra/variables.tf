@@ -5,7 +5,6 @@ variable "region" {}
 variable "sshPublicKey" {}
 variable "sshPublicKeyPath" {}
 variable "existing_vnet" {}
-variable "bigip_external" {}
 variable "delegated_domain" {}
 variable "namespace" {}
 variable "api_p12_file" {}
@@ -25,4 +24,5 @@ variable "gateway_type" {}
 variable "fleet_label" {}
 variable "cidr" {}
 variable "azure_subnets" {}
+variable "xcs_tenant" {}
 variable "tags" {}

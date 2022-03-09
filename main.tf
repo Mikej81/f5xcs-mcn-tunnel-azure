@@ -20,21 +20,20 @@ module "azure" {
   adminPassword = module.util.admin_password
   f5_t1_ext     = var.f5_t1_ext
   tags          = var.tags
+  name          = lower(var.name)
 }
 
 # Volterra Module
 # Build Site Token and Cloud Credential
 # Build out Azure Site
-# Build out Origin Pool & LB
 module "volterra" {
   source = "./volterra"
 
   depends_on = [
     module.azure.azure_resource_group_main, module.azure.azure_virtual_network_main, module.azure.azure_subnet_internal, module.azure.azure_subnet_external
   ]
-  name      = var.name
-  namespace = var.namespace
-  #resource_group_name   = "${var.projectPrefix}_rg""${var.projectPrefix}_main_rg"
+  name                      = var.name
+  namespace                 = var.namespace
   azure_resource_group_name = module.azure.azure_resource_group_main.name
   resource_group_name       = "${module.util.env_prefix}_volt_rg"
   fleet_label               = var.fleet_label
@@ -48,6 +47,7 @@ module "volterra" {
   azure_client_id           = var.azure_client_id
   azure_client_secret       = var.azure_client_secret
   azure_tenant_id           = var.azure_tenant_id
+  xcs_tenant                = var.tenant_name
   azure_subscription_id     = var.azure_subscription_id
   gateway_type              = var.gateway_type
   volterra_tf_action        = var.volterra_tf_action
@@ -57,7 +57,6 @@ module "volterra" {
   subnet_internal           = module.azure.azure_subnet_internal
   subnet_external           = module.azure.azure_subnet_external
   subnet_inspec_ext         = module.azure.azure_subnet_inspec_ext
-  bigip_external            = var.f5_t1_ext["f5vm01ext_thi"]
   delegated_domain          = var.delegated_dns_domain
   tags                      = var.tags
 }
@@ -70,10 +69,14 @@ module "remotehost" {
   projectPrefix  = module.util.env_prefix
   security_group = module.azure.azurerm_network_security_group_app
   appSubnet      = module.azure.azurerm_subnet_application
+  publicip       = module.azure.azurerm_public_ip
+  publicip_id    = module.azure.azurerm_public_ip_id
+  dns_server     = var.dns_server
   adminUserName  = var.adminUserName
   adminPassword  = module.util.admin_password
-  app01ip        = var.app01ip
-  tags           = var.tags
-  timezone       = var.timezone
-  instanceType   = var.appInstanceType
+  #app01ip        = var.app01ip
+  tags         = var.tags
+  timezone     = var.timezone
+  instanceType = var.appInstanceType
+  name         = var.name
 }

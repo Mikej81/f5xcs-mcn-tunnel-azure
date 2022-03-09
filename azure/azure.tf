@@ -11,48 +11,6 @@ resource "azurerm_resource_group" "main" {
   tags = var.tags
 }
 
-# Create KeyVault so Vinnie doesnt yell at me
-resource "azurerm_key_vault" "keyvault" {
-  name                = "k${var.projectPrefix}v-keyvault"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  tenant_id           = data.azurerm_client_config.current.tenant_id
-
-  enabled_for_disk_encryption     = true
-  enabled_for_deployment          = true
-  enabled_for_template_deployment = true
-  soft_delete_retention_days      = 7
-  purge_protection_enabled        = false
-
-  sku_name = "standard"
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "create",
-      "get",
-    ]
-
-    secret_permissions = [
-      "list",
-      "set",
-      "get",
-      "delete",
-      "purge",
-      "recover"
-    ]
-  }
-}
-
-# Create a Secret in Vault
-resource "azurerm_key_vault_secret" "secret" {
-  name         = "szechuan"
-  value        = var.adminPassword
-  key_vault_id = azurerm_key_vault.keyvault.id
-}
-
 # Create Availability Set
 resource "azurerm_availability_set" "avset" {
   name                         = "${var.projectPrefix}-avset"
@@ -61,6 +19,18 @@ resource "azurerm_availability_set" "avset" {
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
   managed                      = true
+}
+
+# Create public IP for VM
+resource "azurerm_public_ip" "publicip" {
+  name                = "${var.projectPrefix}-pip"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.main.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  domain_name_label   = lower("${var.name}-${var.projectPrefix}")
+
+  tags = var.tags
 }
 
 # Create a Virtual Network within the Resource Group
@@ -126,8 +96,8 @@ locals {
 }
 
 # outputs
-output "azure_key_vault_uri" { value = azurerm_key_vault.keyvault.vault_uri }
-output "azure_key_vault_secret" { value = azurerm_key_vault_secret.secret.id }
+#output "azure_key_vault_uri" { value = azurerm_key_vault.keyvault.vault_uri }
+#output "azure_key_vault_secret" { value = azurerm_key_vault_secret.secret.id }
 output "azure_resource_group_main" { value = azurerm_resource_group.main }
 output "azure_availability_set_avset" { value = azurerm_availability_set.avset }
 output "azure_virtual_network_main" { value = azurerm_virtual_network.main }
@@ -138,3 +108,5 @@ output "azure_subnet_inspec_int" { value = azurerm_subnet.inspect_internal }
 output "azure_subnet_inspec_ext" { value = azurerm_subnet.inspect_external }
 output "azurerm_subnet_application" { value = azurerm_subnet.application }
 output "azure_subscription_primary" { value = data.azurerm_subscription.primary }
+output "azurerm_public_ip" { value = azurerm_public_ip.publicip.fqdn }
+output "azurerm_public_ip_id" { value = azurerm_public_ip.publicip.id }

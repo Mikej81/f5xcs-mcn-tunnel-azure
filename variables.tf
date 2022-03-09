@@ -96,50 +96,18 @@ variable "azure_subnets" {
   type        = map(string)
   description = "REQUIRED: Subnet CIDRs"
   default = {
-    "management"  = "10.90.0.0/24"
-    "external"    = "10.90.1.0/24"
-    "internal"    = "10.90.2.0/24"
-    "inspect_ext" = "10.90.3.0/24"
-    "inspect_int" = "10.90.4.0/24"
-    "application" = "10.90.10.0/24"
+    "external"    = "10.90.0.0/24"
+    "internal"    = "10.90.1.0/24"
+    "inspect_ext" = "10.90.2.0/24"
+    "inspect_int" = "10.90.3.0/24"
+    "application" = "10.90.4.0/24"
   }
 }
-
-variable "f5_mgmt" {
-  description = "F5 BIG-IP Management IPs.  These must be in the management subnet."
-  type        = map(string)
-  default = {
-    f5vm01mgmt = "10.90.0.14"
-    f5vm02mgmt = "10.90.0.15"
-  }
-}
-
-# bigip external private ips, these must be in external subnet
-variable "f5_t1_ext" {
-  description = "Tier 1 BIG-IP External IPs.  These must be in the external subnet."
-  type        = map(string)
-  default = {
-    f5vm01ext     = "10.90.2.14"
-    f5vm01ext_sec = "10.90.2.11"
-    f5vm01ext_thi = "10.90.2.12"
-    f5vm01ext_fou = "10.90.2.13"
-  }
-}
-
-variable "f5_t1_int" {
-  description = "Tier 1 BIG-IP Internal IPs.  These must be in the internal subnet."
-  type        = map(string)
-  default = {
-    f5vm01int     = "10.90.4.14"
-    f5vm01int_sec = "10.90.4.11"
-  }
-}
-
 
 variable "app01ip" {
   type        = string
   description = "OPTIONAL: Example Application used by all use-cases to demonstrate functionality of deploymeny, must reside in the application subnet."
-  default     = "10.90.10.101"
+  default     = "10.90.1.6"
 }
 
 
@@ -151,43 +119,6 @@ variable "jumpinstanceType" { default = "Standard_B2s" }
 
 # Demo Application Instance Size
 variable "appInstanceType" { default = "Standard_DS3_v2" }
-
-# BIGIP Image
-variable "image_name" {
-  type        = string
-  description = "REQUIRED: BIG-IP Image Name.  'az vm image list --output table --publisher f5-networks --location [region] --offer f5-big-ip --all'  Default f5-bigip-virtual-edition-1g-best-hourly is PAYG Image.  For BYOL use f5-big-all-2slot-byol"
-  default     = "f5-bigip-virtual-edition-1g-best-hourly"
-}
-variable "product" {
-  type        = string
-  description = "REQUIRED: BYOL = f5-big-ip-byol, PAYG = f5-big-ip-best"
-  default     = "f5-big-ip-best"
-}
-variable "bigip_version" {
-  type        = string
-  description = "REQUIRED: BIG-IP Version.  Note: verify available versions before using as images can change."
-  default     = "latest"
-}
-
-# BIGIP Setup
-# Licenses are only needed when using BYOL images
-variable "licenses" {
-  type = map(string)
-  default = {
-    "license1" = ""
-    "license2" = ""
-    "license3" = ""
-    "license4" = ""
-  }
-}
-
-variable "hosts" {
-  type = map(string)
-  default = {
-    "host1" = "f5vm01"
-    "host2" = "f5vm02"
-  }
-}
 
 variable "dns_server" {
   type        = string

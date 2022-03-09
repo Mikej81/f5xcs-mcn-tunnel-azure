@@ -10,7 +10,6 @@ packages:
   - apt-transport-https
   - gnupg2
   - gnutls-bin
-  - nginx
   - ocserv
   - ssg-base
   - ssg-debderived
@@ -20,6 +19,7 @@ packages:
   - auditd
   - audispd-plugins
   - iptables-persistent
+  - software-properties-common
 write_files:
   - owner: root:root
     path: /etc/logrotate.d/auditd
@@ -154,11 +154,15 @@ runcmd:
   - sudo snap refresh core
   - sudo snap install --classic certbot
   - sudo ln -s /snap/bin/certbot /usr/bin/certbot
-  - sudo certbot --standalone -n -d ${fqdn} --hsts --email ${owner} --agree-tos
-  - sudo ls /etc/letsencrypt/live/${fqdn}
-  - sed -i '/server-cert/a server-cert = /etc/letsencrypt/live/${fqdn}/fullchain.pem' /etc/ocserv/ocserv.conf
-  - sed -i '/server-key/a server-key = /etc/letsencrypt/live/${fqdn}/privkey.pem' /etc/ocserv/ocserv.conf
-  - sed -i '/ca-cert/a ca-cert = /etc/letsencrypt/live/${fqdn}/chain.pem' /etc/ocserv/ocserv.conf
+  #- sudo certbot certonly --standalone -n -d ${fqdn} --hsts --email ${owner} --agree-tos
+  - sed -i '/server-cert/a server-cert = /etc/letsencrypt/live/${fqdn}/fullchain.pem' /tmp/ocserv.conf
+  - sed -i '/server-key/a server-key = /etc/letsencrypt/live/${fqdn}/privkey.pem' /tmp/ocserv.conf
+  - sed -i '/ca-cert/a ca-cert = /etc/letsencrypt/live/${fqdn}/chain.pem' /tmp/ocserv.conf
+  - sudo mv -f /tmp/ocserv.conf /etc/ocserv/ocserv.conf 
+  - sudo mv -f /tmp/ocserv.socket /lib/systemd/system/ocserv.socket
+  - sudo systemctl restart ocserv
+  - iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+  - dpkg-reconfigure iptables-persistent
   - sudo apt-get -y clean
   - sudo apt-get -y autoremove --purge
   - echo "maxpoll = 17" >> /etc/ntp.conf
@@ -168,9 +172,6 @@ runcmd:
   - sed -i 's|max_log_file_action = ROTATE|max_log_file_action = SYSLOG|g' /etc/audit/auditd.conf
   - sed -i 's|disk_full_action = SUSPEND|disk_full_action = HALT|g' /etc/audit/auditd.conf
   - systemctl restart auditd.service
-system_info:
-  default_user:
-    groups: [docker]
 power_state:
   mode: reboot
   timeout: 120

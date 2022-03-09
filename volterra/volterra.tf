@@ -12,7 +12,7 @@ resource "volterra_token" "new_site" {
   name      = format("%s-sca-token", var.name)
   namespace = "system"
 
-  labels = var.tags
+  #labels = var.tags
 }
 
 output "token" {
@@ -22,7 +22,7 @@ output "token" {
 resource "volterra_cloud_credentials" "azure_site" {
   name      = format("%s-azure-credentials", var.name)
   namespace = "system"
-  labels    = var.tags
+  #labels    = var.tags
   azure_client_secret {
     client_id       = var.azure_client_id
     subscription_id = var.azure_subscription_id
@@ -40,12 +40,63 @@ output "credentials" {
   value = volterra_cloud_credentials.azure_site.name
 }
 
+resource "volterra_virtual_network" "inside" {
+  name      = format("%s-inside", var.name)
+  namespace = "system"
 
+  site_local_inside_network = true
+}
+resource "volterra_virtual_network" "outside" {
+  name      = format("%s-outside", var.name)
+  namespace = "system"
+
+  site_local_network = true
+}
+resource "volterra_virtual_network" "global" {
+  name      = format("%s-global", var.name)
+  namespace = "system"
+
+  global_network = true
+}
+
+resource "volterra_network_connector" "snat" {
+  name      = format("%s-connector-snat", var.name)
+  namespace = "system"
+
+  sli_to_global_snat {
+    global_vn {
+      name      = volterra_virtual_network.global.name
+      namespace = "system"
+      #tenant    = var.xcs_tenant
+    }
+    snat_config {
+      interface_ip    = true
+      dynamic_routing = true
+    }
+  }
+
+  disable_forward_proxy = true
+}
+resource "volterra_network_connector" "direct" {
+  name      = format("%s-connector-direct", var.name)
+  namespace = "system"
+
+  sli_to_global_dr {
+    global_vn {
+      name      = volterra_virtual_network.global.name
+      namespace = "system"
+      #tenant    = var.xcs_tenant
+    }
+
+  }
+
+  disable_forward_proxy = true
+}
 
 resource "volterra_azure_vnet_site" "azure_site" {
   name      = format("%s-vnet-site", var.name)
   namespace = "system"
-  labels    = var.tags
+  #labels    = var.tags
 
   depends_on = [
     var.subnet_internal, var.subnet_external
@@ -57,13 +108,6 @@ resource "volterra_azure_vnet_site" "azure_site" {
   ssh_key        = file(var.sshPublicKeyPath)
 
   machine_type = "Standard_D3_v2"
-
-  # commenting out the co-ordinates because of below issue
-  # https://github.com/volterraedge/terraform-provider-volterra/issues/61
-  #coordinates {
-  #  latitude  = "43.653"
-  #  longitude = "-79.383"
-  #}
 
   #assisted = true
   azure_cred {
@@ -92,63 +136,23 @@ resource "volterra_azure_vnet_site" "azure_site" {
     azure_certified_hw = "azure-byol-multi-nic-voltmesh"
     // azure-byol-multi-nic-voltmesh
 
-    no_forward_proxy  = true
-    no_global_network = true
+    no_forward_proxy = true
+    #no_global_network = true
     #no_inside_static_routes  = true
     no_network_policy        = true
     no_outside_static_routes = true
 
-    inside_static_routes {
-      static_route_list {
-        custom_static_route {
-          attrs = [
-            "ROUTE_ATTR_INSTALL_HOST",
-            "ROUTE_ATTR_INSTALL_FORWARDING"
-          ]
-          subnets {
-            ipv4 {
-              prefix = "10.90.0.0"
-              plen   = 16
-            }
-          }
-          nexthop {
-            type = "NEXT_HOP_USE_CONFIGURED"
-            nexthop_address {
-              ipv4 {
-                addr = "10.90.2.1"
-              }
-            }
-            interface {
-              namespace = "system"
-              name      = "ves-io-azure-vnet-site-${format("%s-vnet-site", var.name)}-inside"
-            }
-          }
-        }
-        custom_static_route {
-          attrs = [
-            "ROUTE_ATTR_INSTALL_HOST",
-            "ROUTE_ATTR_INSTALL_FORWARDING"
-          ]
-          subnets {
-            ipv4 {
-              prefix = "0.0.0.0"
-              plen   = 0
-            }
-          }
-          nexthop {
-            type = "NEXT_HOP_NETWORK_INTERFACE"
-            nexthop_address {
-              ipv4 {
-                addr = ""
-              }
-            }
-            interface {
-              namespace = "system"
-              name      = "ves-io-azure-vnet-site-${format("%s-vnet-site", var.name)}-inside"
-            }
+    global_network_list {
+      global_network_connections {
+        sli_to_global_dr {
+          global_vn {
+            #tenant    = var.xcs_tenant
+            namespace = "system"
+            name      = volterra_virtual_network.global.name
           }
         }
       }
+
     }
 
     az_nodes {

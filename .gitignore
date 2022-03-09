@@ -36,6 +36,8 @@ prep.sh
 
 **/debug/*
 
+**/outputs/
+
 .DS_Store
 
 **/sites.json
