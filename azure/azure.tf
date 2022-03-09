@@ -41,14 +41,6 @@ resource "azurerm_virtual_network" "main" {
   location            = azurerm_resource_group.main.location
 }
 
-# Create the Management Subnet within the Virtual Network
-resource "azurerm_subnet" "mgmt" {
-  name                 = "mgmt"
-  virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = azurerm_resource_group.main.name
-  address_prefixes     = [var.subnets["management"]]
-}
-
 # Create the external Subnet within the Virtual Network
 resource "azurerm_subnet" "external" {
   name                 = "external"
@@ -89,19 +81,15 @@ resource "azurerm_subnet" "application" {
 
 # Obtain Gateway IP for each Subnet
 locals {
-  depends_on = [azurerm_subnet.mgmt, azurerm_subnet.external]
-  mgmt_gw    = cidrhost(azurerm_subnet.mgmt.address_prefix, 1)
+  depends_on = [azurerm_subnet.external]
   ext_gw     = cidrhost(azurerm_subnet.external.address_prefix, 1)
   int_gw     = cidrhost(azurerm_subnet.internal.address_prefix, 1)
 }
 
 # outputs
-#output "azure_key_vault_uri" { value = azurerm_key_vault.keyvault.vault_uri }
-#output "azure_key_vault_secret" { value = azurerm_key_vault_secret.secret.id }
 output "azure_resource_group_main" { value = azurerm_resource_group.main }
 output "azure_availability_set_avset" { value = azurerm_availability_set.avset }
 output "azure_virtual_network_main" { value = azurerm_virtual_network.main }
-output "azure_subnet_mgmt" { value = azurerm_subnet.mgmt }
 output "azure_subnet_external" { value = azurerm_subnet.external }
 output "azure_subnet_internal" { value = azurerm_subnet.internal }
 output "azure_subnet_inspec_int" { value = azurerm_subnet.inspect_internal }

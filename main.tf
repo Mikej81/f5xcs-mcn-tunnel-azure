@@ -18,7 +18,6 @@ module "azure" {
   cidr          = var.cidr
   subnets       = var.azure_subnets
   adminPassword = module.util.admin_password
-  f5_t1_ext     = var.f5_t1_ext
   tags          = var.tags
   name          = lower(var.name)
 }
