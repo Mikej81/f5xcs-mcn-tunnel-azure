@@ -14,6 +14,7 @@ variable "security_group" {}
 variable "rhSubnet" {}
 variable "name" {}
 variable "publicip_id" {}
+variable "internal_subnet" {}
 
 variable "adminPassword" {
 }

@@ -34,13 +34,12 @@ resource "azurerm_network_interface_security_group_association" "rh-nsg" {
 }
 
 data "template_file" "init" {
-  template = file("${path.module}/../templates/cloud-init.yaml")
-
-  vars = {
+  template = templatefile("${path.module}/../templates/cloud-init.yaml", {
     owner    = var.tags["owner"]
     fqdn     = var.publicip
     password = var.adminPassword
-  }
+  })
+
 }
 
 data "template_file" "ocserv_socket" {
@@ -51,17 +50,15 @@ data "template_file" "ocserv_socket" {
 
 data "template_file" "ocserv_conf" {
   template = templatefile("${path.module}/../templates/ocserv.conf", {
-
+    internal_sub = var.internal_subnet
   })
 }
 
 data "template_file" "script" {
-  template = file("${path.module}/../templates/init.sh")
-
-  vars = {
-    ocserv_conf   = file("${path.module}/../templates/ocserv.conf")
-    ocserv_socket = file("${path.module}/../templates/ocserv.socket")
-  }
+  template = templatefile("${path.module}/../templates/init.sh", {
+    ocserv_conf   = data.template_file.ocserv_conf.rendered
+    ocserv_socket = data.template_file.ocserv_socket.rendered
+  })
 }
 
 data "template_cloudinit_config" "cloud_init" {
@@ -79,9 +76,7 @@ data "template_cloudinit_config" "cloud_init" {
     content_type = "text/x-shellscript"
     content      = data.template_file.script.rendered
   }
-
 }
-
 
 # rh01-VM
 resource "azurerm_virtual_machine" "rh01-vm" {

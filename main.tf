@@ -73,6 +73,7 @@ module "remotehost" {
   adminUserName    = var.adminUserName
   adminPassword    = module.util.admin_password
   rh01ip           = var.rh01ip
+  internal_subnet  = var.azure_subnets["internal"]
   tags             = var.tags
   timezone         = var.timezone
   instanceType     = var.appInstanceType

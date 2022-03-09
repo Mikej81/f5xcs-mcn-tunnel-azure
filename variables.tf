@@ -101,6 +101,15 @@ variable "azure_subnets" {
   }
 }
 
+variable "subnets_nocidr" {
+  type        = map(string)
+  description = "REQUIRED: Subnet No-CIDRs"
+  default = {
+    external = "10.90.0.0"
+    internal = "10.90.1.0"
+  }
+}
+
 variable "rh01ip" {
   type        = string
   description = "OPTIONAL: Example Application used by all use-cases to demonstrate functionality of deploymeny, must reside in the application subnet."
