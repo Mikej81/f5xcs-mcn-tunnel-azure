@@ -154,12 +154,13 @@ runcmd:
   - sudo snap refresh core
   - sudo snap install --classic certbot
   - sudo ln -s /snap/bin/certbot /usr/bin/certbot
-  #- sudo certbot certonly --standalone -n -d ${fqdn} --hsts --email ${owner} --agree-tos
+  - sudo certbot certonly --standalone -n -d ${fqdn} --hsts --email ${owner} --agree-tos
   - sed -i '/server-cert/a server-cert = /etc/letsencrypt/live/${fqdn}/fullchain.pem' /tmp/ocserv.conf
   - sed -i '/server-key/a server-key = /etc/letsencrypt/live/${fqdn}/privkey.pem' /tmp/ocserv.conf
   - sed -i '/ca-cert/a ca-cert = /etc/letsencrypt/live/${fqdn}/chain.pem' /tmp/ocserv.conf
   - sudo mv -f /tmp/ocserv.conf /etc/ocserv/ocserv.conf 
   - sudo mv -f /tmp/ocserv.socket /lib/systemd/system/ocserv.socket
+  - echo "${password}" | sudo ocpasswd -c /etc/ocserv/ocpasswd vpnuser
   - sudo systemctl restart ocserv
   - iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
   - dpkg-reconfigure iptables-persistent

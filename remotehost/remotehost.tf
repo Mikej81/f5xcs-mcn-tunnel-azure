@@ -18,9 +18,9 @@ resource "azurerm_network_interface" "rh01-nic" {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.appSubnet.id
+    subnet_id                     = var.rhSubnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.app01ip
+    private_ip_address            = var.rh01ip
     public_ip_address_id          = var.publicip_id
     primary                       = true
   }
@@ -37,8 +37,9 @@ data "template_file" "init" {
   template = file("${path.module}/../templates/cloud-init.yaml")
 
   vars = {
-    owner = var.tags["owner"]
-    fqdn  = var.publicip
+    owner    = var.tags["owner"]
+    fqdn     = var.publicip
+    password = var.adminPassword
   }
 }
 

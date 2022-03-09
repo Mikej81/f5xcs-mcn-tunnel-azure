@@ -57,28 +57,6 @@ resource "azurerm_subnet" "internal" {
   address_prefixes     = [var.subnets["internal"]]
 }
 
-# Create the external IPS subnet within the Vnet
-resource "azurerm_subnet" "inspect_external" {
-  name                 = "inspect_external"
-  virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = azurerm_resource_group.main.name
-  address_prefixes     = [var.subnets["inspect_ext"]]
-}
-# Create the internal IPS subnet within the Vnet
-resource "azurerm_subnet" "inspect_internal" {
-  name                 = "inspect_internal"
-  virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = azurerm_resource_group.main.name
-  address_prefixes     = [var.subnets["inspect_int"]]
-}
-# Create the Demo Application Subnet within the Virtual Network
-resource "azurerm_subnet" "application" {
-  name                 = "application"
-  virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = azurerm_resource_group.main.name
-  address_prefixes     = [var.subnets["application"]]
-}
-
 # Obtain Gateway IP for each Subnet
 locals {
   depends_on = [azurerm_subnet.external]
@@ -92,9 +70,6 @@ output "azure_availability_set_avset" { value = azurerm_availability_set.avset }
 output "azure_virtual_network_main" { value = azurerm_virtual_network.main }
 output "azure_subnet_external" { value = azurerm_subnet.external }
 output "azure_subnet_internal" { value = azurerm_subnet.internal }
-output "azure_subnet_inspec_int" { value = azurerm_subnet.inspect_internal }
-output "azure_subnet_inspec_ext" { value = azurerm_subnet.inspect_external }
-output "azurerm_subnet_application" { value = azurerm_subnet.application }
 output "azure_subscription_primary" { value = data.azurerm_subscription.primary }
 output "azurerm_public_ip" { value = azurerm_public_ip.publicip.fqdn }
 output "azurerm_public_ip_id" { value = azurerm_public_ip.publicip.id }

@@ -12,11 +12,10 @@ output "deployment_info" {
   value = {
     instances = [
       {
-        admin_username = var.adminUserName
-        admin_password = module.util.admin_password
-        #azure_key_vault_uri = module.azure.azure_key_vault_uri
-        #volterra_cloud_credential = module.volterra.credentials
-        #volterra_site_token       = module.volterra.token
+        admin_username       = var.adminUserName
+        admin_password       = module.util.admin_password
+        host_mapping         = "sudo echo ${var.rh01ip}   ${module.azure.azurerm_public_ip} >> /etc/hosts"
+        connect              = "echo -n ${module.util.admin_password} | sudo openconnect -b ${var.rh01ip} -u vpnuser --passwd-on-stdin"
         azure_resource_group = module.azure.azure_resource_group_main.name
       }
     ]

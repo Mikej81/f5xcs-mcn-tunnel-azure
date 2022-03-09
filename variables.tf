@@ -96,20 +96,16 @@ variable "azure_subnets" {
   type        = map(string)
   description = "REQUIRED: Subnet CIDRs"
   default = {
-    "external"    = "10.90.0.0/24"
-    "internal"    = "10.90.1.0/24"
-    "inspect_ext" = "10.90.2.0/24"
-    "inspect_int" = "10.90.3.0/24"
-    "application" = "10.90.4.0/24"
+    "external" = "10.90.0.0/24"
+    "internal" = "10.90.1.0/24"
   }
 }
 
-variable "app01ip" {
+variable "rh01ip" {
   type        = string
   description = "OPTIONAL: Example Application used by all use-cases to demonstrate functionality of deploymeny, must reside in the application subnet."
   default     = "10.90.1.6"
 }
-
 
 # BIGIP Instance Type, DS5_v2 is a solid baseline for BEST
 variable "instanceType" { default = "Standard_DS5_v2" }

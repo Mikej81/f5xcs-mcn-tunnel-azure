@@ -34,7 +34,7 @@ module "volterra" {
   name                      = var.name
   namespace                 = var.namespace
   azure_resource_group_name = module.azure.azure_resource_group_main.name
-  resource_group_name       = "${module.util.env_prefix}_volt_rg"
+  resource_group_name       = "${module.util.env_prefix}_xcs_rg"
   fleet_label               = var.fleet_label
   url                       = var.api_url
   api_p12_file              = var.api_p12_file
@@ -55,27 +55,28 @@ module "volterra" {
   azure_subnets             = var.azure_subnets
   subnet_internal           = module.azure.azure_subnet_internal
   subnet_external           = module.azure.azure_subnet_external
-  subnet_inspec_ext         = module.azure.azure_subnet_inspec_ext
   delegated_domain          = var.delegated_dns_domain
   tags                      = var.tags
 }
 
 module "remotehost" {
-  source         = "./remotehost"
-  location       = var.location
-  region         = var.region
-  resource_group = module.azure.azure_resource_group_main
-  projectPrefix  = module.util.env_prefix
-  security_group = module.azure.azurerm_network_security_group_app
-  appSubnet      = module.azure.azurerm_subnet_application
-  publicip       = module.azure.azurerm_public_ip
-  publicip_id    = module.azure.azurerm_public_ip_id
-  dns_server     = var.dns_server
-  adminUserName  = var.adminUserName
-  adminPassword  = module.util.admin_password
-  #app01ip        = var.app01ip
-  tags         = var.tags
-  timezone     = var.timezone
-  instanceType = var.appInstanceType
-  name         = var.name
+  source           = "./remotehost"
+  location         = var.location
+  region           = var.region
+  resource_group   = module.azure.azure_resource_group_main
+  projectPrefix    = module.util.env_prefix
+  security_group   = module.azure.azurerm_network_security_group_app
+  rhSubnet         = module.azure.azure_subnet_internal
+  publicip         = module.azure.azurerm_public_ip
+  publicip_id      = module.azure.azurerm_public_ip_id
+  dns_server       = var.dns_server
+  adminUserName    = var.adminUserName
+  adminPassword    = module.util.admin_password
+  rh01ip           = var.rh01ip
+  tags             = var.tags
+  timezone         = var.timezone
+  instanceType     = var.appInstanceType
+  name             = var.name
+  sshPublicKeyPath = var.sshPublicKeyPath
+  sshPublicKey     = var.sshPublicKey
 }
