@@ -51,15 +51,15 @@ Apply complete! Resources: 30 added, 0 changed, 0 destroyed.
 Outputs:
 
 auto_tag = {
-  "resource_group" = "iqan5khd_main_rg"
+  "resource_group" = "<random_hash>_main_rg"
 }
 deployment_info = {
-  "deploymentId" = "iqan5khd"
+  "deploymentId" = "<random_hash>"
   "instances" = [
     {
       "admin_password" = "<random_hash>"
       "admin_username" = "xadmin"
-      "azure_resource_group" = "iqan5khd_main_rg"
+      "azure_resource_group" = "<random_hash>_main_rg"
       "connect" = "echo -n <random_hash> | sudo openconnect -b domain.region.cloudapp.azure.com -u vpnuser --passwd-on-stdin"
       "host_mapping" = "sudo -- sh -c 'echo <app_address>   domain.region.cloudapp.azure.com.cloudapp.azure.com >> /etc/hosts'"
     },
