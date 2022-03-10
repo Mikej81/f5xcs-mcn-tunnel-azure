@@ -8,3 +8,4 @@ variable "cidr" {}
 variable "subnets" {}
 variable "tags" {}
 variable "name" {}
+variable "source_net" {}

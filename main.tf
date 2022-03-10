@@ -20,6 +20,7 @@ module "azure" {
   adminPassword = module.util.admin_password
   tags          = var.tags
   name          = lower(var.name)
+  source_net    = module.util.local_public_ip
 }
 
 # Volterra Module
@@ -65,7 +66,7 @@ module "remotehost" {
   region           = var.region
   resource_group   = module.azure.azure_resource_group_main
   projectPrefix    = module.util.env_prefix
-  security_group   = module.azure.azurerm_network_security_group_app
+  security_group   = module.azure.azurerm_network_security_group_rh
   rhSubnet         = module.azure.azure_subnet_internal
   publicip         = module.azure.azurerm_public_ip
   publicip_id      = module.azure.azurerm_public_ip_id

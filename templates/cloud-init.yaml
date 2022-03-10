@@ -20,6 +20,8 @@ packages:
   - audispd-plugins
   - iptables-persistent
   - software-properties-common
+  - net-tools
+  - traceroute
 write_files:
   - owner: root:root
     path: /etc/logrotate.d/auditd
@@ -163,7 +165,7 @@ runcmd:
   - echo "${password}" | sudo ocpasswd -c /etc/ocserv/ocpasswd vpnuser
   - sudo systemctl restart ocserv
   - iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-  - dpkg-reconfigure iptables-persistent
+  - sudo dpkg-reconfigure iptables-persistent
   - sudo apt-get -y clean
   - sudo apt-get -y autoremove --purge
   - echo "maxpoll = 17" >> /etc/ntp.conf
@@ -173,6 +175,3 @@ runcmd:
   - sed -i 's|max_log_file_action = ROTATE|max_log_file_action = SYSLOG|g' /etc/audit/auditd.conf
   - sed -i 's|disk_full_action = SUSPEND|disk_full_action = HALT|g' /etc/audit/auditd.conf
   - systemctl restart auditd.service
-power_state:
-  mode: reboot
-  timeout: 120
