@@ -21,7 +21,7 @@ output "env_prefix" {
 }
 
 output "local_public_ip" {
-  value = data.http.myip
+  value = chomp(data.http.myip.body)
 }
 
 output "admin_password" {
