@@ -67,7 +67,7 @@ resource "volterra_network_connector" "snat" {
     global_vn {
       name      = volterra_virtual_network.global.name
       namespace = "system"
-      #tenant    = var.xcs_tenant
+      #tenant    = var.volterra_tenant
     }
     snat_config {
       interface_ip    = true
@@ -85,7 +85,7 @@ resource "volterra_network_connector" "direct" {
     global_vn {
       name      = volterra_virtual_network.global.name
       namespace = "system"
-      #tenant    = var.xcs_tenant
+      #tenant    = var.volterra_tenant
     }
 
   }
@@ -146,7 +146,7 @@ resource "volterra_azure_vnet_site" "azure_site" {
       global_network_connections {
         sli_to_global_dr {
           global_vn {
-            #tenant    = var.xcs_tenant
+            #tenant    = var.volterra_tenant
             namespace = "system"
             name      = volterra_virtual_network.global.name
           }

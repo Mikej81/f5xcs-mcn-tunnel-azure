@@ -1,4 +1,4 @@
-# Volterra Environment
+# volterra Environment
 variable "projectPrefix" {}
 variable "location" {}
 variable "region" {}
@@ -23,5 +23,5 @@ variable "gateway_type" {}
 variable "fleet_label" {}
 variable "cidr" {}
 variable "azure_subnets" {}
-variable "xcs_tenant" {}
+variable "volterra_tenant" {}
 variable "tags" {}

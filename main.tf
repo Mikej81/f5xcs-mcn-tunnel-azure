@@ -23,11 +23,11 @@ module "azure" {
   source_net    = module.util.local_public_ip
 }
 
-# Volterra Module
+# volterra Module
 # Build Site Token and Cloud Credential
 # Build out Azure Site
 module "volterra" {
-  source = "./volterra"
+  source = "./xcs"
 
   depends_on = [
     module.azure.azure_resource_group_main, module.azure.azure_virtual_network_main, module.azure.azure_subnet_internal, module.azure.azure_subnet_external
@@ -35,7 +35,7 @@ module "volterra" {
   name                      = var.name
   namespace                 = var.namespace
   azure_resource_group_name = module.azure.azure_resource_group_main.name
-  resource_group_name       = "${module.util.env_prefix}_xcs_rg"
+  resource_group_name       = "${module.util.env_prefix}_volterra_rg"
   fleet_label               = var.fleet_label
   url                       = var.api_url
   api_p12_file              = var.api_p12_file
@@ -47,7 +47,7 @@ module "volterra" {
   azure_client_id           = var.azure_client_id
   azure_client_secret       = var.azure_client_secret
   azure_tenant_id           = var.azure_tenant_id
-  xcs_tenant                = var.tenant_name
+  volterra_tenant           = var.tenant_name
   azure_subscription_id     = var.azure_subscription_id
   gateway_type              = var.gateway_type
   volterra_tf_action        = var.volterra_tf_action

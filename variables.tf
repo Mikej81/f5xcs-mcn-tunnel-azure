@@ -31,30 +31,30 @@ variable "sshPublicKeyPath" {
 // Required Variable
 variable "api_p12_file" {
   type        = string
-  description = "REQUIRED:  This is the path to the Volterra API Key.  See https://volterra.io/docs/how-to/user-mgmt/credentials"
+  description = "REQUIRED:  This is the path to the volterra API Key.  See https://volterra.io/docs/how-to/user-mgmt/credentials"
   default     = "./api-creds.p12"
 }
 
 variable "api_cert" {
   type        = string
-  description = "REQUIRED:  This is the path to the Volterra API Key.  See https://volterra.io/docs/how-to/user-mgmt/credentials"
+  description = "REQUIRED:  This is the path to the volterra API Key.  See https://volterra.io/docs/how-to/user-mgmt/credentials"
   default     = "./api2.cer"
 }
 variable "api_key" {
   type        = string
-  description = "REQUIRED:  This is the path to the Volterra API Key.  See https://volterra.io/docs/how-to/user-mgmt/credentials"
+  description = "REQUIRED:  This is the path to the volterra API Key.  See https://volterra.io/docs/how-to/user-mgmt/credentials"
   default     = "./api.key"
 }
 // Required Variable
 variable "tenant_name" {
   type        = string
-  description = "REQUIRED:  This is your Volterra Tenant Name:  https://<tenant_name>.console.ves.volterra.io/api"
+  description = "REQUIRED:  This is your volterra Tenant Name:  https://<tenant_name>.console.ves.volterra.io/api"
   default     = "mr-customer"
 }
 // Required Variable
 variable "namespace" {
   type        = string
-  description = "REQUIRED:  This is your Volterra App Namespace"
+  description = "REQUIRED:  This is your volterra App Namespace"
   default     = "namespace"
 }
 // Required Variable
@@ -73,7 +73,7 @@ variable "delegated_dns_domain" {
 // Required Variable
 variable "api_url" {
   type        = string
-  description = "REQUIRED:  This is your Volterra API url"
+  description = "REQUIRED:  This is your volterra API url"
   default     = "https://playground.console.ves.volterra.io/api"
 }
 

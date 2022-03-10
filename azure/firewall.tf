@@ -34,10 +34,6 @@ resource "azurerm_network_security_group" "remote_host" {
   tags = var.tags
 }
 
-output "azurerm_network_security_group_main" {
-  value = azurerm_network_security_group.main
-}
-
 output "azurerm_network_security_group_rh" {
   value = azurerm_network_security_group.remote_host
 }
