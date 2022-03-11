@@ -64,7 +64,3 @@ export VES_P12_PASSWORD=123456789
 #export VOLT_API_CERT=
 #export VOLT_API_KEY=
 #export VOLT_API_URL=
-
-# Accept terms for programatic deployment of images
-az vm image terms accept --offer f5-big-ip-byol --publisher f5-networks --plan f5-big-ip-byol
-az vm image terms accept --offer f5-big-ip-best --publisher f5-networks --plan f5-big-ip-best
