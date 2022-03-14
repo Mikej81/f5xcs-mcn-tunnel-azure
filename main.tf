@@ -35,7 +35,7 @@ module "volterra" {
   name                      = var.name
   namespace                 = var.namespace
   azure_resource_group_name = module.azure.azure_resource_group_main.name
-  resource_group_name       = "${module.util.env_prefix}_volterra_rg"
+  resource_group_name       = "${module.util.env_prefix}_xcs_rg"
   fleet_label               = var.fleet_label
   url                       = var.api_url
   api_p12_file              = var.api_p12_file

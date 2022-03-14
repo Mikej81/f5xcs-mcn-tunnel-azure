@@ -96,10 +96,12 @@ resource "volterra_network_connector" "direct" {
 resource "volterra_azure_vnet_site" "azure_site" {
   name      = format("%s-vnet-site", var.name)
   namespace = "system"
-  #labels    = var.tags
+  labels = {
+    concentrator = "true"
+  }
 
   depends_on = [
-    var.subnet_internal, var.subnet_external
+    var.subnet_internal, var.subnet_external, volterra_voltstack_site.stack, volterra_k8s_cluster.cluster
   ]
 
   azure_region = var.location
