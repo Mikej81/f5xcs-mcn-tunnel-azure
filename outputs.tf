@@ -1,24 +1,8 @@
 ## OUTPUTS ###
 
-output "auto_tag" {
-  value = {
-    resource_group = module.azure.azure_resource_group_main.name
-    #volt_group     = module.volterra.volterra_resource_group.name
-    #tags           = module.volterra.volterra_resource_group_tags
-  }
-}
-
 output "deployment_info" {
   value = {
-    instances = [
-      {
-        admin_username       = var.adminUserName
-        admin_password       = module.util.admin_password
-        host_mapping         = "sudo -- sh -c 'echo ${var.rh01ip}   ${module.azure.azurerm_public_ip} >> /etc/hosts'"
-        connect              = "echo -n ${module.util.admin_password} | sudo openconnect -b ${module.azure.azurerm_public_ip} -u vpnuser --passwd-on-stdin"
-        azure_resource_group = module.azure.azure_resource_group_main.name
-      }
-    ]
-    deploymentId = module.util.env_prefix
+    config_prefix           = var.name
+    deployment_instructions = "Add ${module.xcs.xcs_global_connector_local} global network connector to your local fleet.  Link will not be live until the cloud side has finished provisioning."
   }
 }
