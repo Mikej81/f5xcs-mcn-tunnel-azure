@@ -131,17 +131,6 @@ variable "dns_server" {
   default     = "168.63.129.16"
 }
 
-## ASM Policy
-variable "asm_policy" {
-  type        = string
-  description = "REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning"
-  default     = "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"
-}
-
-variable "ntp_server" { default = "time.nist.gov" }
-variable "timezone" { default = "UTC" }
-variable "onboard_log" { default = "/var/log/startup-script.log" }
-
 # TAGS
 variable "tags" {
   description = "Environment tags for objects"
